@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>deferred-statement-block</title>
+<meta charset="utf-8"></meta>
+<script src="jquery-1.10.2.js"></script>
+<script src="../src/deferred-statement-block.js"></script>
+
+</head>
+
+<body>
+
+	<button id="button1">button1</button>
+
+	<script type="text/javascript">
+//first some test related installation: register a mouse click and  
+jQuery('#button1').click(function() {
+	console.log('button1 clicked');
+	jQuery(document.body).append('<p id="p2">Hello World 2</p>');
+});
+//append a new id="p1" node in 2 secs.
+setTimeout(function() {
+	jQuery(document.body).append('<p id="p1">Hello World</p>');
+}, 2000);
+
+
+//now start using the framework, in this example we want to wait until element with id="p1"
+//is availablea and when it is trigger the "click" event on element id="button1".
+
+//firts the namespace to work with
+var ns = DeferredStatementBlock;
+
+//then create the statement block
+var block1 = new ns.StatementBlock();
+
+//then add a statement that will wait for #p1 and when is available trigger an event on #button1 
+block1.add(function(job) {
+	block1.waitForElement('#p1').done(function() {
+		console.log('p1 founded'); 
+		block1.triggerEvent('click', '#button1');
+		job.resolve(); //don't forget to return control to the next statement. 
+	});
+});
+
+//the next statement will just wait for element #p2 to be available
+block1.add(function(job) {
+	block1.waitForElement('#p2').done(function() {
+		console.log('p2 founded');
+		job.resolve();  
+	});
+});
+
+// The interesting part to notice here is that statements are synchronous and, when they are executed they 
+// must release the control so the next statement is executed calling job.resolve(). Until that happens the next statament
+// is not executed. 
+
+//start executing the block! Statements will be  
+block1.exec(); 
+
+	</script>
+
+</body>
+</html>
