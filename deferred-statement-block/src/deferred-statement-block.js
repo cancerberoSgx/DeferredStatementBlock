@@ -57,13 +57,23 @@ ns.StatementBlock.prototype.exec = function() {
 	return this._execNext();
 }; 
 
-ns.StatementBlock.prototype.append = ns.StatementBlock.prototype.add = function(
-		fn) {
-	var config = null;
-	if (arguments.length == 2) {
-		fn = arguments[1];
-		config = arguments[0];
+/**
+ * @param config Object, optional. Configuration for this statement. Example:  {delay:1000}
+ * @param fn Function mandatory, Function to execute. It receives a Deffered Object parameter that it needs to be .resolved() for give control to the next statement in this block.  
+ */
+ns.StatementBlock.prototype.append = ns.StatementBlock.prototype.add = function() {	
+	var config = null, fn=null;
+	if(arguments.length==2) {
+		config=arguments[0]; 
+		fn=arguments[1]; 
 	}
+	else {
+		fn=arguments[0]; 
+	}
+//	if (arguments.length == 2) {
+//		fn = arguments[1];
+//		config = arguments[0];
+//	}
 	if (config) {
 		fn = this._resolveFromConfig(config, fn);
 	}
@@ -73,6 +83,7 @@ ns.StatementBlock.prototype.append = ns.StatementBlock.prototype.add = function(
 ns.StatementBlock.prototype._resolveFromConfig = function(config, fn) {
 	if (config.delay) {
 		return function() {
+			console.log('delay: '+config.delay); 
 			setTimeout(fn, config.delay); 
 		};
 	} else {

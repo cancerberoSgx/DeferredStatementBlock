@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>deferred-statement-block</title>
+<meta charset="utf-8"></meta>
+<script src="jquery-1.10.2.js"></script>
+<script src="../src/deferred-statement-block.js"></script>
+
+</head>
+
+<body>
+
+	<button id="button1">button1</button>
+
+	<script type="text/javascript">
+jQuery('#button1').click(function() {
+	console.log('button1 clicked');
+	jQuery(document.body).append('<p id="p2">Hello World 2</p>');
+});
+//append a new id="p1" node in 2 secs.
+setTimeout(function() {
+	jQuery(document.body).append('<p id="p1">Hello World 1</p>');
+}, 2000);
+
+var ns = DeferredStatementBlock;
+
+var block1 = new ns.StatementBlock();
+
+block1.add(function(job) {
+	block1.waitForElement('#p1').done(function() {
+		block1.triggerEvent('click', '#button1');
+		job.resolve(); 
+	});
+});
+
+//wait for 2 secs and log something. 
+block1.add({delay: 2000}, function(job) {
+	console.log('hello world 3'); 
+}); 
+
+
+block1.exec(); 
+
+	</script>
+
+</body>
+</html>

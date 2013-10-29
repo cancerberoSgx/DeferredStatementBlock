@@ -11,7 +11,7 @@ grunt.initConfig({
 
 		my_target : {
 			files : {
-				'build/<%= pkg.name %>-deferred-statement-block.min.js' : [ 'src/deferred-statement-block.js' ]
+				'build/<%= pkg.name %>.min.js' : [ 'src/deferred-statement-block.js' ]
 			}
 		}
 	}

@@ -51,13 +51,13 @@ block1.add(function(job) {
 	});
 });
 
-// The interesting part to notice here is that statements are synchronous and, when they are executed they 
-// must release the control so the next statement is executed calling job.resolve(). Until that happens the next statament
-// is not executed. 
+//start executing the block! and that's all
 
-//start executing the block! Statements will be  
 block1.exec(); 
 
+//The interesting part to notice here is that statements are synchronous and, when they are executed they 
+//must release the control so the next statement is executed calling job.resolve(). Until that happens the next statament
+//is not executed. 
 	</script>
 
 </body>
