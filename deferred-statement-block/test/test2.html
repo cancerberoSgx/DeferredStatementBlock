@@ -21,7 +21,7 @@ jQuery('#button1').click(function() {
 //append a new id="p1" node in 2 secs.
 setTimeout(function() {
 	jQuery(document.body).append('<p id="p1">Hello World 1</p>');
-}, 2000);
+}, 1000);
 
 var ns = DeferredStatementBlock;
 
@@ -35,10 +35,16 @@ block1.add(function(job) {
 });
 
 //wait for 2 secs and log something. 
-block1.add({delay: 2000}, function(job) {
-	console.log('hello world 3'); 
+block1.add({delay: 1000}, function(job) {
+	console.log('hello world 3');
+	job.resolve(); 
 }); 
 
+block1.add({delay: 1000}, function(job) {
+	console.log('hello world 4');
+	this.triggerEvent('click', '#button1'); 
+	job.resolve(); 
+});
 
 block1.exec(); 
 

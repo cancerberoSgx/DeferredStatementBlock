@@ -70,21 +70,31 @@ ns.StatementBlock.prototype.append = ns.StatementBlock.prototype.add = function(
 	else { 
 		fn=arguments[0]; 
 	}
-//	if (arguments.length == 2) {
-//		fn = arguments[1];
-//		config = arguments[0];
-//	}
 	if (config) {
+		if(this.statementConfig) { //merge
+			for ( var i in this.statementConfig) {
+				if(!config[i]){
+					config[i]=this.statementConfig[i]; 
+				}
+			}
+		}
 		fn = this._resolveFromConfig(config, fn);
 	}
 	this.statements.push(fn);
 }; 
-
+/** sets a default statement configuration - this configuration will be merged with the one passed in add method. */
+ns.StatementBlock.prototype.setStatementConfig = function(config) {
+	this.statementConfig=config; 
+}; 
 ns.StatementBlock.prototype._resolveFromConfig = function(config, fn) {
+	var self = this;  
 	if (config.delay) {
-		return function() {
-			console.log('delay: '+config.delay); 
-			setTimeout(fn, config.delay); 
+		return function(job) {
+			setTimeout(
+				function(){ 
+					fn.apply(self, [job]); // functions making functions, oh my lord!
+				}
+			, config.delay); 
 		};
 	} else {
 		return fn;
