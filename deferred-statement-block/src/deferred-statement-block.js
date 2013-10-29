@@ -67,7 +67,7 @@ ns.StatementBlock.prototype.append = ns.StatementBlock.prototype.add = function(
 		config=arguments[0]; 
 		fn=arguments[1]; 
 	}
-	else {
+	else { 
 		fn=arguments[0]; 
 	}
 //	if (arguments.length == 2) {
